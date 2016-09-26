@@ -1,0 +1,151 @@
+#+TITLE: Some things about Sed 
+#+AUTHOR: Zachary Rump
+#+DATE: 09-24-2016
+
+* Sed
+** About
+   
+*** History
+    - Short for stream editor
+    - utility that takes text as an input, performs some operations on the input, and writes to standard output. 
+    - Original version was written from 1973-1974 By Lee E. Mcmahon of Bell Labs. 
+    - Influenced by the earlier editor 'ed'. Particularly it's usage of '/' for pattern matching and 's///' for search and replace. 
+    - One of the earliest tools to support regular expressions. 
+
+** Usage
+   
+*** Basic 
+All of the following sed commands have an implicit input stream "cat foo.txt"
+where foo.txt contains:
+foo
+bar
+baz
+
+Piping to sed with no arguments basically behaves like `cat`
+
+#+begin_src shell
+cat foo.txt
+#+end_src
+
+foo
+bar
+baz
+
+
+
+#+begin_src sed
+ sed ''
+#+end_src
+
+foo
+bar
+baz
+
+One way to understand how sed works is to think of it as operating in 3 stages: [ Input | Pattern space | Output ]
+Sed moves 1 line from the input into the pattern space, 
+performs all the commands inside the quotes ('') on the text in the pattern space, 
+then moves it to the output, gets the next line...repeat for all lines in the input.
+
+The first switch documented in the man page is `-n` which is short for `--quiet` or `--silent`
+Description: Suppresses automatic printing of pattern space. 
+It still copies the input into the pattern space, and performs the commands on it, but doesn't print to the output. 
+
+#+begin_src sed
+sed -n ''
+#+end_src
+
+[ No output ]
+
+With the `-n` flag we can explicitly tell sed to print the pattern space using the 'p' command.
+Print every line:
+
+#+begin_src sed
+sed -n 'p'
+#+end_src
+
+foo
+bar
+baz
+
+If you use the 'p' command by itself without the '-n' flag it will print two copies of every line. 
+E.g. `cat foo.txt | sed 'p'`
+
+*** Commands in succession
+Operating commands in succession can be done using the -e flag. 
+The 'd' command deletes the pattern space so this example actually prints nothing.
+
+#+begin_src sed
+sed -e 'd' -e 'p' 
+#+end_src
+
+A shorthand is to use the ';' operator
+
+#+begin_src sed
+sed 'd; p'
+#+end_src
+*** Substituion 
+    
+**** Basic substitution 
+The search and replace or substition command is 's' 
+The syntax is 's/search/replace'
+
+Examples: 
+
+Change 'b' to 'f'
+
+#+begin_src sed 
+sed 's/b/f'
+#+end_src
+
+foo
+far
+faz
+
+**** Ranges
+***** Single line
+The following expression changes 'b' to 'f' but only on line 3
+
+#+begin_src sed 
+sed '3s/b/f'
+#+end_src
+
+foo
+bar
+faz
+
+***** Range of lines
+The following substitutes 'b' for 'f' on lines between 2 and 3 (inclusive)
+
+#+begin_src sed 
+sed '2,3s/b/f'
+#+end_src
+
+foo
+far
+faz
+
+***** Search pattern as range
+
+The following expression says to replace 'a' with 'g' from the first 'f' to the end of input. 
+    - The match operator (//) matches the first 'f' in the input
+    - '$' represents the end of the input 
+
+#+begin_src sed 
+sed '/f/,$s/a/g'
+#+end_src
+
+foo
+bgr
+bgz
+
+***** Execute multiple commands on a range
+
+This can be done by enclosing the commands in brackets {}
+
+We can use this in conjunction with '-n' and the 'p' command to have sed print only the lines in the specified range. 
+#+begin_src sed
+sed -n '2,3 {s/b/f/; p}'
+#+end_src
+
+far
+faz
