@@ -17,15 +17,18 @@
 *** Basic 
 All of the following sed commands have an implicit input stream "cat foo.txt"
 where foo.txt contains:
+
 foo
 bar
 baz
+
 
 Piping to sed with no arguments basically behaves like `cat`
 
 #+begin_src shell
 cat foo.txt
 #+end_src
+
 
 foo
 bar
@@ -37,9 +40,11 @@ baz
  sed ''
 #+end_src
 
+
 foo
 bar
 baz
+
 
 One way to understand how sed works is to think of it as operating in 3 stages: [ Input | Pattern space | Output ]
 Sed moves 1 line from the input into the pattern space, 
@@ -87,19 +92,72 @@ sed 'd; p'
     
 **** Basic substitution 
 The search and replace or substition command is 's' 
-The syntax is 's/search/replace'
+The syntax is 's/search/replace/<optional flags>'
 
 Examples: 
 
 Change 'b' to 'f'
+With no flags sed changes the first match of the regex.
+In this case there is only one match per line, so all the lines get changed.
 
 #+begin_src sed 
-sed 's/b/f'
+sed 's/b/f/'
 #+end_src
+
 
 foo
 far
 faz
+
+
+**** Substitution Flags
+
+The search and replace and flags are better demonstrated demonstrated with new input: 
+#+begin_src
+    foo foo
+    bar bar
+    baz baz
+#+end_src
+
+Using the previous example, we can see the behavior is to change only the first occurrence of the regexp.
+
+#+begin_src sed 
+sed 's/b/f/'
+#+end_src
+
+
+foo foo
+far bar
+faz baz
+
+
+****** G flag
+
+Using the 'g' flag we can direct sed to replace all occurrences of the regexp.
+#+begin_src sed 
+sed 's/b/f/g'
+#+end_src
+
+
+foo foo
+far far
+faz faz
+
+
+****** Number flag
+
+We can replace the n'th match of the regexp using the number 'n' 
+E.g. replace the 2nd match
+
+#+begin_src sed 
+sed 's/b/f/2'
+#+end_src
+
+
+foo foo
+bar far
+baz faz
+
 
 **** Ranges
 ***** Single line
@@ -109,9 +167,11 @@ The following expression changes 'b' to 'f' but only on line 3
 sed '3s/b/f'
 #+end_src
 
+
 foo
 bar
 faz
+
 
 ***** Range of lines
 The following substitutes 'b' for 'f' on lines between 2 and 3 (inclusive)
@@ -120,9 +180,11 @@ The following substitutes 'b' for 'f' on lines between 2 and 3 (inclusive)
 sed '2,3s/b/f'
 #+end_src
 
+
 foo
 far
 faz
+
 
 ***** Search pattern as range
 
@@ -134,9 +196,11 @@ The following expression says to replace 'a' with 'g' from the first 'f' to the 
 sed '/f/,$s/a/g'
 #+end_src
 
+
 foo
 bgr
 bgz
+
 
 ***** Execute multiple commands on a range
 
@@ -147,5 +211,54 @@ We can use this in conjunction with '-n' and the 'p' command to have sed print o
 sed -n '2,3 {s/b/f/; p}'
 #+end_src
 
+
 far
 faz
+
+
+*** Other commands
+**** Print line number
+This be done using the '=' command. 
+#+begin_src sed
+sed '='
+#+end_src
+
+
+1
+foo
+2
+bar
+3
+baz
+
+
+**** 'n' command
+
+The 'n' command prints the pattern space (if auto print not disabled); 
+then replaces the pattern space with next line of input. 
+If the end of input is reached sed exits without processing remaining commands.
+
+We can use the print line number in conjuction with 'n' to demonstrate how it works. 
+
+#+begin_src sed
+sed '=; n'
+#+end_src
+
+
+1
+foo
+bar
+3
+baz
+
+
+** Sources
+
+https://www.youtube.com/watch?v=l0mKlIswojA
+http://www.grymoire.com/Unix/Sed.html
+https://www.gnu.org/software/sed/manual/sed.html
+http://sed.sourceforge.net/sed1line.txt
+
+
+
+
