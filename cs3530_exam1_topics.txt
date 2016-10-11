@@ -1,0 +1,60 @@
+* CS3530 Exam 1
+** Format 
+	- 50 Multiple Choice
+	- 10 Short Answer
+** Topics
+	- History of Unix + GNU/Linux
+	- Broad categories of Linux distros
+	- Names of popular *nix shells
+	- What appearance of prompt indicates [$, #] 
+		- I.e. root or not 
+	- Control Sequences
+	- Redirection to channels (meta characters)  
+		- I.e. pipe stderr to stdout 2>&1
+	- Basic system info (date, w, whoami, uptime, uname)
+	- Navigating filesystem (ls, cd, pwd, ...)
+	- Viewing files: (cat, file, diff, compare, more, less, clear, head, tail)
+	- Working w/ files: (cp, mv, rm, rmdir, mkdir, touch)
+	- Manipulating txt files: (wc, sort, uniq, cut)
+	- Permissions: (chmod, chown, chgrp, newgrp);
+	- Users/grps: (adduser, userdel, usermod, groupadd, groupdel, groupmod)
+	- Internet:
+		- IPTABLES 1-liner to disable all rules
+		- ifconfig
+		- route 
+		- ping
+		- traceroute
+		- netstat
+		- netcat
+		- nslookup, dig, host, curl, wget , whois, lftp(?), scp, telnet, ssh
+	- Install software using apt-get/aptitude 
+	- Using grep/pipes in conjuction
+	- Working w/ processes (top, ps, kill) 
+	- Timing/Scheduling (at, cron, crontab)
+	- locate vs find commands
+	- hidden files
+	- absolute vs relative paths
+	- environment Variables
+		- i.e. What are they?	
+	- requirements for running shell script 
+		- Shebang
+	- termination/exit codes (in scripts)
+		- $?
+	- Tab completion, history command, alias
+	- 7 layer OSI model 
+	- MAC addresses + corresponding OSI layer
+	- IP addresses & corresponding OSI layer (3?)
+	- TCP vs UDP 
+		- TCP sends ack/noack 
+		- UDP doesn't care
+	- DNS i.e. how it works
+	- VMs vs Containers
+	- Define SaaS, PaaS, IaaS
+	- The kernel & what it does
+	- Boot process / init / runlevels
+	- [ SysVinit vs systemd ] vs upstart vs launchd, etc.
+	- define: syscall
+	- Basics of distributed systems
+	 	- What is a cluster?
+		- What is sharding?
+
